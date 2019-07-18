@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Container should render default 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": undefined,
+      "marginBottom": 0,
+      "marginLeft": 0,
+      "marginRight": 0,
+      "marginTop": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "paddingRight": 0,
+      "paddingTop": 0,
+      "position": "relative",
+    }
+  }
+/>
+`;
+
+exports[`Container should render with Margins 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": undefined,
+      "marginBottom": 22,
+      "marginLeft": 10,
+      "marginRight": 15,
+      "marginTop": 20,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "paddingRight": 0,
+      "paddingTop": 0,
+      "position": "relative",
+    }
+  }
+/>
+`;
+
+exports[`Container should render with Padding 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": undefined,
+      "marginBottom": 0,
+      "marginLeft": 0,
+      "marginRight": 0,
+      "marginTop": 0,
+      "paddingBottom": 25,
+      "paddingLeft": 10,
+      "paddingRight": 15,
+      "paddingTop": 20,
+      "position": "relative",
+    }
+  }
+/>
+`;
+
+exports[`Container should render with color 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "#dfa",
+      "marginBottom": 0,
+      "marginLeft": 0,
+      "marginRight": 0,
+      "marginTop": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "paddingRight": 0,
+      "paddingTop": 0,
+      "position": "relative",
+    }
+  }
+/>
+`;

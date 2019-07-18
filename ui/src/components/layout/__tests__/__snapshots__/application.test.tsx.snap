@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Layout should render correctly 1`] = `
+<div>
+  <AppBar>
+    <Text>
+      Insight
+    </Text>
+  </AppBar>
+  <div />
+</div>
+`;
