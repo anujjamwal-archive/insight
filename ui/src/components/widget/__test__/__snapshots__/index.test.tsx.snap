@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Widget should render 1`] = `
+<Container
+  height={10}
+  plane="content"
+  width={10}
+>
+  <Column
+    mainAxisAlignment="flex-start"
+    mainAxisSize="max"
+  >
+    <Row
+      crossAxisAlignment="center"
+      crossAxisSize="40px"
+      mainAxisAlignment="flex-start"
+    >
+      <Text>
+        Some Title
+      </Text>
+    </Row>
+    <Row
+      crossAxisSize="max"
+      mainAxisAlignment="flex-start"
+    />
+  </Column>
+</Container>
+`;
+
+exports[`Widget should render with children 1`] = `
+<Container
+  height={10}
+  plane="content"
+  width={10}
+>
+  <Column
+    mainAxisAlignment="flex-start"
+    mainAxisSize="max"
+  >
+    <Row
+      crossAxisAlignment="center"
+      crossAxisSize="40px"
+      mainAxisAlignment="flex-start"
+    >
+      <Text>
+        Some Title
+      </Text>
+    </Row>
+    <Row
+      crossAxisSize="max"
+      mainAxisAlignment="flex-start"
+    >
+      <Text>
+        Hello
+      </Text>
+    </Row>
+  </Column>
+</Container>
+`;

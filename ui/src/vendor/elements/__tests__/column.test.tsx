@@ -5,7 +5,7 @@ import Column from "../column";
 describe("Column", () => {
   it("should render with space-between", () => {
     const column = shallow(
-      <Column width="50px" mainAxisAlignment="space-between" />
+      <Column crossAxisAlignment="stretch" mainAxisAlignment="space-between" />
     );
 
     expect(column).toMatchSnapshot();

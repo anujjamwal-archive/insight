@@ -4,9 +4,9 @@ exports[`Row should render with space-between 1`] = `
 <div
   style={
     Object {
+      "alignItems": "stretch",
       "display": "flex",
       "flexDirection": "row",
-      "height": "50px",
       "justifyContent": "space-between",
     }
   }

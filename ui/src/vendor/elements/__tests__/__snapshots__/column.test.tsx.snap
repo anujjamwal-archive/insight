@@ -4,10 +4,10 @@ exports[`Column should render with space-between 1`] = `
 <div
   style={
     Object {
+      "alignItems": "stretch",
       "display": "flex",
       "flexDirection": "column",
       "justifyContent": "space-between",
-      "width": "50px",
     }
   }
 />

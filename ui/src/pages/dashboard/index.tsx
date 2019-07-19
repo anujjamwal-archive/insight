@@ -6,7 +6,6 @@ import Renderer from "../../lib/core/renderer";
 
 interface Props {
   match: match<{ id: string }>;
-  spec: Report;
 }
 
 interface State {
@@ -18,7 +17,20 @@ class Dashboard extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = { currentPage: 0, renderer: new Renderer(props.spec) };
+    const spec: Report = {
+      title: "Dashboard " + props.match.params.id,
+      pages: [
+        {
+          title: "Page 1",
+          children: {
+            type: "column",
+            children: []
+          }
+        }
+      ]
+    };
+
+    this.state = { currentPage: 0, renderer: new Renderer(spec) };
   }
 
   render() {

@@ -5,15 +5,19 @@ exports[`Container should render default 1`] = `
   style={
     Object {
       "backgroundColor": undefined,
+      "display": "flex",
+      "height": 21,
       "marginBottom": 0,
       "marginLeft": 0,
       "marginRight": 0,
       "marginTop": 0,
+      "overflow": "hidden",
       "paddingBottom": 0,
       "paddingLeft": 0,
       "paddingRight": 0,
       "paddingTop": 0,
       "position": "relative",
+      "width": 14,
     }
   }
 />
@@ -24,15 +28,19 @@ exports[`Container should render with Margins 1`] = `
   style={
     Object {
       "backgroundColor": undefined,
+      "display": "flex",
+      "height": 21,
       "marginBottom": 22,
       "marginLeft": 10,
       "marginRight": 15,
       "marginTop": 20,
+      "overflow": "hidden",
       "paddingBottom": 0,
       "paddingLeft": 0,
       "paddingRight": 0,
       "paddingTop": 0,
       "position": "relative",
+      "width": 14,
     }
   }
 />
@@ -43,15 +51,19 @@ exports[`Container should render with Padding 1`] = `
   style={
     Object {
       "backgroundColor": undefined,
+      "display": "flex",
+      "height": 21,
       "marginBottom": 0,
       "marginLeft": 0,
       "marginRight": 0,
       "marginTop": 0,
+      "overflow": "hidden",
       "paddingBottom": 25,
       "paddingLeft": 10,
       "paddingRight": 15,
       "paddingTop": 20,
       "position": "relative",
+      "width": 14,
     }
   }
 />
@@ -62,15 +74,19 @@ exports[`Container should render with color 1`] = `
   style={
     Object {
       "backgroundColor": "#dfa",
+      "display": "flex",
+      "height": 21,
       "marginBottom": 0,
       "marginLeft": 0,
       "marginRight": 0,
       "marginTop": 0,
+      "overflow": "hidden",
       "paddingBottom": 0,
       "paddingLeft": 0,
       "paddingRight": 0,
       "paddingTop": 0,
       "position": "relative",
+      "width": 14,
     }
   }
 />
