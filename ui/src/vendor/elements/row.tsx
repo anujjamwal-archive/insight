@@ -16,6 +16,7 @@ interface Props {
     | "space-between"
     | "space-evenly"
     | "space-around";
+  style?: React.CSSProperties;
   children?: React.ReactChild | React.ReactChild[];
 }
 
@@ -32,8 +33,10 @@ const generateStyle = (props: Props): React.CSSProperties => {
       : {
           height: props.crossAxisSize === "max" ? "100%" : props.crossAxisSize
         };
+  const style = props.style || {};
 
   return {
+    ...style,
     ...mainAxis,
     ...crossAxis,
     display: "flex",

@@ -2,8 +2,8 @@ import * as React from "react";
 import { Color } from "csstype";
 
 interface Props {
-  width: number;
-  height: number;
+  width: number | string;
+  height: number | string;
   marginLeft?: number;
   marginTop?: number;
   marginBottom?: number;
