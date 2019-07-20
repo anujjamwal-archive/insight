@@ -43,6 +43,7 @@ const generateStyle = (props: Props): React.CSSProperties => {
     ...crossAxis,
     display: "flex",
     flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: props.mainAxisAlignment,
     alignItems: props.crossAxisAlignment
   };
