@@ -2,16 +2,19 @@ import * as React from "react";
 import { Color } from "csstype";
 
 interface Props {
+  className?: string;
   width: number | string;
   height: number | string;
-  marginLeft?: number;
-  marginTop?: number;
-  marginBottom?: number;
-  marginRight?: number;
-  paddingLeft?: number;
-  paddingTop?: number;
-  paddingBottom?: number;
-  paddingRight?: number;
+  marginLeft?: number | string;
+  marginTop?: number | string;
+  marginBottom?: number | string;
+  marginRight?: number | string;
+  paddingLeft?: number | string;
+  paddingTop?: number | string;
+  paddingBottom?: number | string;
+  paddingRight?: number | string;
+  maxHeight?: number | string;
+  maxWidth?: number | string;
   color?: Color;
   children?: React.ReactChild;
   plane?: "content";
@@ -37,13 +40,17 @@ const generateStyle = (props: Props): React.CSSProperties => {
     position: "relative",
     height: props.height,
     width: props.width,
+    maxHeight: props.maxHeight,
+    maxWidth: props.maxWidth,
     overflow: "hidden",
     display: "flex"
   };
 };
 
 const Container: React.FC<Props> = props => (
-  <div style={generateStyle(props)}>{props.children}</div>
+  <div className={props.className} style={generateStyle(props)}>
+    {props.children}
+  </div>
 );
 
 export default Container;

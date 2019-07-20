@@ -1,6 +1,7 @@
 import * as React from "react";
 import { AppBar, Icon } from "../../vendor/material";
-import { Text, Column, Row } from "../../vendor/elements";
+import { Text, Column, Row, Spacer } from "../../vendor/elements";
+import TimeRange from "../timerange";
 
 interface Props {
   title: string;
@@ -22,9 +23,12 @@ const Layout: React.FC<Props> = props => (
         style={{ alignSelf: "center" }}
       >
         <Icon icon="menu" size="md-24" status="active-unfocused" />
+        <Spacer width="10px" />
         <Text>{props.title}</Text>
       </Row>
       <Row mainAxisAlignment="flex-end" style={{ alignSelf: "center" }}>
+        <TimeRange />
+        <Spacer width="10px" />
         <Icon icon="account_circle" size="md-24" status="active-unfocused" />
       </Row>
     </AppBar>

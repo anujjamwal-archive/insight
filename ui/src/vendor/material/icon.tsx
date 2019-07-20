@@ -7,7 +7,9 @@ const generateStyle = (props: IProps): React.CSSProperties => ({
   fontStyle: "normal",
   display: "inline-block",
   fontSize: +props.size.replace("md-", ""),
-  opacity: opacityLookup[props.status]
+  opacity: opacityLookup[props.status],
+  animation: (props.spin && "spin 2s linear infinite") || undefined,
+  cursor: props.onClick && "pointer"
 });
 
 type iconSize = "md-18" | "md-24" | "md-36" | "md-48";
@@ -24,11 +26,15 @@ interface IProps {
   icon: string;
   size: iconSize;
   status: status;
+  onClick?: () => void;
+  spin?: boolean;
   color?: Color;
 }
 
 const Icon: React.SFC<IProps> = (props: IProps) => (
-  <i style={generateStyle(props)}>{props.icon}</i>
+  <i style={generateStyle(props)} onClick={props.onClick}>
+    {props.icon}
+  </i>
 );
 
 export default Icon;

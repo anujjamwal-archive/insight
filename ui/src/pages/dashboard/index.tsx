@@ -23,8 +23,26 @@ class Dashboard extends React.PureComponent<Props, State> {
         {
           title: "Page 1",
           children: {
-            type: "column",
-            children: []
+            type: "kpi",
+            title: "Total Sales",
+            display: {
+              height: 100,
+              width: 200,
+              value: "data[0].sales",
+              precision: 4,
+              fontSize: "3vw",
+              color: [
+                { color: "red" },
+                { th: 10e3, color: "yellow" },
+                { th: 10e6, color: "green" }
+              ]
+            },
+            query: {
+              datasource: "",
+              metrics: [],
+              buckets: [],
+              order: []
+            }
           }
         }
       ]

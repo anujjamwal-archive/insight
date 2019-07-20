@@ -1,11 +1,14 @@
 import * as React from "react";
 import { Container, Column, Row, Text } from "../../vendor/elements";
 import { Icon } from "../../vendor/material";
+import { tsPropertySignature } from "@babel/types";
 
 interface Props {
-  width: number;
-  height: number;
+  width: string | number;
+  height: string | number;
   title: string;
+  onRefresh: () => void;
+  isLoading: boolean;
   backgroundColor?: string;
   children?: React.ReactChild | React.ReactChild[];
 }
@@ -14,12 +17,16 @@ const Widget: React.FC<Props> = ({
   title,
   width,
   height,
+  isLoading,
+  onRefresh,
   children,
   backgroundColor
 }) => (
   <Container
+    className="widget"
     width={width}
     height={height}
+    maxWidth="100%"
     plane="content"
     color={backgroundColor || "white"}
   >
@@ -36,7 +43,13 @@ const Widget: React.FC<Props> = ({
         }}
       >
         <Text>{title}</Text>
-        <Icon icon="refresh" status="active-unfocused" size="md-24" />
+        <Icon
+          icon="autorenew"
+          status="active-unfocused"
+          size="md-24"
+          spin={isLoading}
+          onClick={isLoading ? undefined : onRefresh}
+        />
       </Row>
       <Row mainAxisAlignment="flex-start" crossAxisSize="max">
         {children}

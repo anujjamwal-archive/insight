@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/d3": "^5.7.2",
+    "@types/d3-scale": "^2.1.1",
     "@types/enzyme": "^3.10.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/jest": "^24.0.15",
@@ -33,6 +35,8 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
+    "d3": "^5.9.7",
+    "d3-scale": "^3.0.0",
     "derivable": "^2.0.0-beta.3",
     "react": "^16.8.6",
     "react-derivable": "^0.4.0",

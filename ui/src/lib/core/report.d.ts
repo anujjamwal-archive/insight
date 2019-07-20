@@ -20,27 +20,8 @@ interface Row {
   children: Array<Component>;
 }
 
-interface KPI {
-  type: "kpi";
-  title: string;
-  datasource: {
-    id: string;
-    dateFilterField?: string;
-  };
-  metric: {
-    field: string;
-    aggregation: string;
-    alias: string;
-  };
-}
-
-interface Chart {
-  type: "Chart";
-  title: string;
-  datasource: {
-    id: string;
-    dateFilterField?: string;
-  };
+interface Query {
+  datasource: string;
   metrics: Array<{
     field: string;
     aggregation: string;
@@ -48,6 +29,39 @@ interface Chart {
   }>;
   buckets: Array<string>;
   order: Array<string>;
+}
+
+interface QueryResult {
+  id: string;
+  executionTime: number;
+  data: Array<Record<string, any>>;
+}
+
+interface Status<T> {
+  status: "LOADING" | "READY" | "ERROR";
+  payload?: T;
+}
+
+type MetricColor = Array<{ th?: number; color: string }>;
+
+interface KPI {
+  type: "kpi";
+  title: string;
+  query: Query;
+  display: {
+    width: number | string;
+    height: number | string;
+    value: string;
+    precision: number;
+    fontSize: string;
+    color?: MetricColor;
+  };
+}
+
+interface Chart {
+  type: "Chart";
+  title: string;
+  query: Query;
   viz: {
     type: "Series";
     axes: Array<{}>;
@@ -76,4 +90,13 @@ interface Chart {
   };
 }
 
-export { Report, ReportPage };
+export {
+  Chart,
+  Component,
+  KPI,
+  Query,
+  QueryResult,
+  Report,
+  ReportPage,
+  Status
+};
