@@ -1,12 +1,11 @@
 import * as React from "react";
 import { AppBar, Icon } from "../../vendor/material";
 import { Text, Column, Row, Spacer } from "../../vendor/elements";
-import TimeRange from "../timerange";
 
 interface Props {
   title: string;
   backgroundColor?: string;
-  children?: React.ReactChild | React.ReactChild[];
+  children: React.ReactChild;
 }
 
 const Layout: React.FC<Props> = props => (
@@ -14,7 +13,7 @@ const Layout: React.FC<Props> = props => (
     mainAxisAlignment="flex-start"
     mainAxisSize="max"
     crossAxisSize="max"
-    color={props.backgroundColor || "#fafafa"}
+    style={{ backgroundColor: props.backgroundColor || "#fafafa" }}
   >
     <AppBar style={{ paddingLeft: "15px", paddingRight: "15px" }}>
       <Row
@@ -27,20 +26,10 @@ const Layout: React.FC<Props> = props => (
         <Text>{props.title}</Text>
       </Row>
       <Row mainAxisAlignment="flex-end" style={{ alignSelf: "center" }}>
-        <TimeRange />
-        <Spacer width="10px" />
         <Icon icon="account_circle" size="md-24" status="active-unfocused" />
       </Row>
     </AppBar>
-    <Column
-      mainAxisAlignment="flex-start"
-      paddingTop="10px"
-      paddingLeft="10px"
-      paddingBottom="10px"
-      paddingRight="10px"
-    >
-      {props.children}
-    </Column>
+    {props.children}
   </Column>
 );
 

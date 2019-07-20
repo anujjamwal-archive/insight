@@ -1,8 +1,16 @@
 import * as React from "react";
 import { atom } from "derivable";
-import { Report, KPI, QueryResult, Status } from "./report";
+import {
+  Report,
+  KPI,
+  QueryResult,
+  Status,
+  IColumn,
+  IComponent,
+  IRow
+} from "./report";
 import Widget from "../../components/widget";
-import { Text } from "../../vendor/elements";
+import { Text, Column, Row } from "../../vendor/elements";
 import { pure } from "react-derivable";
 import { compactInteger } from "./humanise";
 import * as d3 from "d3";
@@ -18,7 +26,15 @@ class Renderer {
     return this.spec.title;
   }
 
-  private build(kpi: KPI): React.ReactChild {
+  private buildCol(col: IColumn): React.ReactChild {
+    return <Column {...col}>{col.children.map(c => this.build(c))}</Column>;
+  }
+
+  private buildRow(col: IRow): React.ReactChild {
+    return <Row {...col}>{col.children.map(c => this.build(c))}</Row>;
+  }
+
+  private buildKpi(kpi: KPI): React.ReactChild {
     const trigger = atom<number>(1);
     const status = atom<Status<QueryResult>>({ status: "LOADING" });
 
@@ -77,8 +93,21 @@ class Renderer {
     return <WidgetR />;
   }
 
+  private build(c: IComponent): React.ReactChild {
+    switch (c.type) {
+      case "kpi":
+        return this.buildKpi(c);
+      case "column":
+        return this.buildCol(c);
+      case "row":
+        return this.buildRow(c);
+      default:
+        return <div />;
+    }
+  }
+
   buildPage(page: number): React.ReactChild {
-    return <div>{this.build(this.spec.pages[page].children as KPI)}</div>;
+    return this.build(this.spec.pages[page].children);
   }
 }
 

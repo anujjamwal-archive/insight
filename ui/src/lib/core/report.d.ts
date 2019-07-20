@@ -5,19 +5,51 @@ interface Report {
 
 interface ReportPage {
   title: string;
-  children: Component;
+  children: IComponent;
 }
 
-type Component = Row | Column | KPI | Chart;
+type IComponent = IRow | IColumn | KPI | Chart;
 
-interface Column {
+interface IColumn {
   type: "column";
-  children: Array<Component>;
+  crossAxisSize?: string;
+  crossAxisAlignment?:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "stretch"
+    | "baseline";
+  mainAxisSize?: string;
+  mainAxisAlignment:
+    | "center"
+    | "flex-start"
+    | "flex-end"
+    | "space-between"
+    | "space-evenly"
+    | "space-around";
+  style?: React.CSSProperties;
+  children: Array<IComponent>;
 }
 
-interface Row {
+interface IRow {
   type: "row";
-  children: Array<Component>;
+  crossAxisSize?: string;
+  crossAxisAlignment?:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "stretch"
+    | "baseline";
+  mainAxisSize?: string;
+  mainAxisAlignment:
+    | "center"
+    | "flex-start"
+    | "flex-end"
+    | "space-between"
+    | "space-evenly"
+    | "space-around";
+  style?: React.CSSProperties;
+  children: Array<IComponent>;
 }
 
 interface Query {
@@ -92,7 +124,9 @@ interface Chart {
 
 export {
   Chart,
-  Component,
+  IComponent,
+  IColumn,
+  IRow,
   KPI,
   Query,
   QueryResult,

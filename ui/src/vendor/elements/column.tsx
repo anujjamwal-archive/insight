@@ -16,15 +16,7 @@ interface Props {
     | "space-between"
     | "space-evenly"
     | "space-around";
-  color?: string;
-  marginLeft?: number | string;
-  marginTop?: number | string;
-  marginBottom?: number | string;
-  marginRight?: number | string;
-  paddingLeft?: number | string;
-  paddingTop?: number | string;
-  paddingBottom?: number | string;
-  paddingRight?: number | string;
+  style?: React.CSSProperties;
   children?: React.ReactChild | React.ReactChild[];
 }
 
@@ -39,20 +31,15 @@ const generateStyle = (props: Props): React.CSSProperties => {
     props.crossAxisSize === undefined
       ? {}
       : { width: props.crossAxisSize === "max" ? "100%" : props.crossAxisSize };
+
+  const style = props.style || {};
+
   return {
+    ...style,
     ...mainAxis,
     ...crossAxis,
-    backgroundColor: props.color,
     display: "flex",
     flexDirection: "column",
-    marginLeft: props.marginLeft || 0,
-    marginTop: props.marginTop || 0,
-    marginBottom: props.marginBottom || 0,
-    marginRight: props.marginRight || 0,
-    paddingLeft: props.paddingLeft || 0,
-    paddingTop: props.paddingTop || 0,
-    paddingBottom: props.paddingBottom || 0,
-    paddingRight: props.paddingRight || 0,
     justifyContent: props.mainAxisAlignment,
     alignItems: props.crossAxisAlignment
   };
