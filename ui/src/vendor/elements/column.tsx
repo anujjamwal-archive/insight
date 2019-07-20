@@ -30,7 +30,11 @@ const generateStyle = (props: Props): React.CSSProperties => {
   const crossAxis =
     props.crossAxisSize === undefined
       ? {}
-      : { width: props.crossAxisSize === "max" ? "100%" : props.crossAxisSize };
+      : {
+          width: props.crossAxisSize === "max" ? "100%" : props.crossAxisSize,
+          minWidth:
+            props.crossAxisSize !== "max" ? props.crossAxisSize : undefined
+        };
 
   const style = props.style || {};
 
