@@ -1,5 +1,5 @@
 import * as React from "react";
-import { atom } from "derivable";
+import { atom, Derivable, struct } from "derivable";
 import {
   Report,
   KPI,
@@ -7,13 +7,48 @@ import {
   Status,
   IColumn,
   IComponent,
-  IRow
+  IRow,
+  ISelect,
+  ComponentFilter
 } from "./report";
 import Widget from "../../components/widget";
-import { Text, Column, Row } from "../../vendor/elements";
+import { Text, Column, Row, Container } from "../../vendor/elements";
 import { pure } from "react-derivable";
 import { compactInteger } from "./humanise";
 import * as d3 from "d3";
+import Select from "react-select";
+
+class Context {
+  providers: Record<string, any>;
+
+  constructor() {
+    this.providers = {};
+  }
+
+  getProvider<T>(id: string): Derivable<T> {
+    return this.providers[id] as Derivable<T>;
+  }
+
+  registerProvider<T>(id: string, provider: Derivable<T>) {
+    this.providers[id] = provider;
+  }
+}
+
+type FetchFn = (arg: {
+  trigger: Derivable<number>;
+  filters: Record<string, string | string[]>;
+}) => void;
+
+function prepareFilters(f: ComponentFilter[], ctx: Context) {
+  return f
+    .map(v => ({ ...v, value: eval("data => " + v.value) }))
+    .map(v => ({
+      [v.field]: v.valueProvider
+        ? ctx.getProvider(v.valueProvider).derive(data => v.value(data))
+        : atom<string | string[]>(v.value)
+    }))
+    .reduceRight((a, b) => ({ ...a, ...b }), {});
+}
 
 class Renderer {
   spec: Report;
@@ -26,26 +61,35 @@ class Renderer {
     return this.spec.title;
   }
 
-  private buildCol(col: IColumn): React.ReactChild {
-    return <Column {...col}>{col.children.map(c => this.build(c))}</Column>;
+  private buildCol(col: IColumn, ctx: Context): React.ReactChild {
+    return (
+      <Column {...col}>{col.children.map(c => this.build(c, ctx))}</Column>
+    );
   }
 
-  private buildRow(col: IRow): React.ReactChild {
-    return <Row {...col}>{col.children.map(c => this.build(c))}</Row>;
+  private buildRow(col: IRow, ctx: Context): React.ReactChild {
+    return <Row {...col}>{col.children.map(c => this.build(c, ctx))}</Row>;
   }
 
-  private buildKpi(kpi: KPI): React.ReactChild {
+  private buildSelect(sel: ISelect, ctx: Context): React.ReactChild {
     const trigger = atom<number>(1);
     const status = atom<Status<QueryResult>>({ status: "LOADING" });
+    const selection = atom<string>("");
+    const baseQuery = sel.query;
 
-    trigger.react(() => {
+    ctx.registerProvider(sel.id, selection);
+
+    const fetchFn: FetchFn = ({ filters }) => {
       status.set({ status: "LOADING" });
+      let query = { ...baseQuery };
+      query.filters = { ...query.filters, ...(filters || {}) };
 
-      fetch("http://www.mocky.io/v2/5d32665b330000c9c57ba633", {
+      fetch("http://www.mocky.io/v2/5d32d0a03400005400749ed3", {
         method: "POST",
         redirect: "follow",
         mode: "cors",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(query)
       })
         .then(res => res.json())
         .then(res => {
@@ -54,10 +98,66 @@ class Renderer {
         .catch(res => {
           status.set({ status: "ERROR", payload: res });
         });
-    });
+    };
+
+    let filters = sel.filters
+      ? prepareFilters(sel.filters, ctx)
+      : atom<boolean>(false);
+
+    struct({ trigger: trigger, filters: filters }).react(fetchFn);
+    const value = status.derive(v =>
+      v.status === "READY"
+        ? v.payload!.data.map(d => ({
+            value: d[sel.display.valueField],
+            label: d[sel.display.labelField]
+          }))
+        : []
+    );
+    const WidgetR = pure(() => (
+      <Column crossAxisSize={sel.display.width} mainAxisAlignment="flex-start">
+        <Select
+          options={value.get()}
+          className="select-filter"
+          classNamePrefix="select"
+          onChange={(val: any) => selection.set(val)}
+        />
+      </Column>
+    ));
+
+    return <WidgetR />;
+  }
+
+  private buildKpi(kpi: KPI, ctx: Context): React.ReactChild {
+    const trigger = atom<number>(1);
+    const status = atom<Status<QueryResult>>({ status: "LOADING" });
+    const baseQuery = kpi.query;
+
+    const fetchFn: FetchFn = ({ filters }) => {
+      status.set({ status: "LOADING" });
+      let query = { ...baseQuery };
+      query.filters = { ...query.filters, ...(filters || {}) };
+
+      fetch("http://www.mocky.io/v2/5d32665b330000c9c57ba633", {
+        method: "POST",
+        redirect: "follow",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(query)
+      })
+        .then(res => res.json())
+        .then(res => {
+          status.set({ status: "READY", payload: res });
+        })
+        .catch(res => {
+          status.set({ status: "ERROR", payload: res });
+        });
+    };
+
+    let filters = kpi.filters && prepareFilters(kpi.filters, ctx);
+
+    struct({ trigger: trigger, filters: filters }).react(fetchFn);
 
     const fn = eval("data => " + kpi.display.value);
-
     const value = status.derive(v =>
       v.status === "READY" ? fn(v.payload!.data) : ""
     );
@@ -93,21 +193,24 @@ class Renderer {
     return <WidgetR />;
   }
 
-  private build(c: IComponent): React.ReactChild {
+  private build(c: IComponent, ctx: Context): React.ReactChild {
     switch (c.type) {
       case "kpi":
-        return this.buildKpi(c);
+        return this.buildKpi(c, ctx);
       case "column":
-        return this.buildCol(c);
+        return this.buildCol(c, ctx);
       case "row":
-        return this.buildRow(c);
+        return this.buildRow(c, ctx);
+      case "Select":
+        return this.buildSelect(c, ctx);
       default:
         return <div />;
     }
   }
 
   buildPage(page: number): React.ReactChild {
-    return this.build(this.spec.pages[page].children);
+    const ctx = new Context();
+    return this.build(this.spec.pages[page].children, ctx);
   }
 }
 

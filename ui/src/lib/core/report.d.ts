@@ -8,7 +8,19 @@ interface ReportPage {
   children: IComponent;
 }
 
-type IComponent = IRow | IColumn | KPI | Chart;
+type IComponent = IRow | IColumn | KPI | ISelect | Chart;
+
+interface ISelect {
+  id: string;
+  type: "Select";
+  query: Query;
+  display: {
+    width: string;
+    labelField: string;
+    valueField: string;
+  };
+  filters?: Array<ComponentFilter>;
+}
 
 interface IColumn {
   type: "column";
@@ -59,6 +71,7 @@ interface Query {
     aggregation: string;
     alias: string;
   }>;
+  filters?: Record<string, string | string[]>;
   buckets: Array<string>;
   order: Array<string>;
 }
@@ -76,6 +89,12 @@ interface Status<T> {
 
 type MetricColor = Array<{ th?: number; color: string }>;
 
+interface ComponentFilter {
+  field: string;
+  valueProvider: string;
+  value: string | Array<string>;
+}
+
 interface KPI {
   type: "kpi";
   title: string;
@@ -88,6 +107,7 @@ interface KPI {
     fontSize: string;
     color?: MetricColor;
   };
+  filters?: Array<ComponentFilter>;
 }
 
 interface Chart {
@@ -124,9 +144,11 @@ interface Chart {
 
 export {
   Chart,
+  ComponentFilter,
   IComponent,
   IColumn,
   IRow,
+  ISelect,
   KPI,
   Query,
   QueryResult,
