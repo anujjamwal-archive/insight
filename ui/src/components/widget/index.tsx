@@ -43,7 +43,7 @@ const Widget: React.FC<Props> = ({
       >
         <Text>{title}</Text>
         <Icon
-          icon="autorenew"
+          icon="sync"
           status="active-unfocused"
           size={24}
           spin={isLoading}

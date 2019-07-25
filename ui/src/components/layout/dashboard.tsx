@@ -25,7 +25,13 @@ const Layout: React.FC<Props> = props => (
         <Spacer width="10px" />
         <Text>{props.title}</Text>
       </Row>
-      <Row mainAxisAlignment="flex-end" style={{ alignSelf: "center" }}>
+      <Row
+        mainAxisAlignment="flex-end"
+        crossAxisAlignment="center"
+        style={{ alignSelf: "center" }}
+      >
+        <Icon icon="share" size={20} status="active-unfocused" />
+        <Spacer width="10px" />
         <Icon icon="account_circle" size={24} status="active-unfocused" />
       </Row>
     </AppBar>
