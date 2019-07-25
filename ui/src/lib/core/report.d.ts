@@ -106,7 +106,7 @@ interface KPI {
     height: number | string;
     value: string;
     precision: number;
-    fontSize: string;
+    fontSize: number;
     color?: MetricColor;
   };
   filters?: Array<ComponentFilter>;

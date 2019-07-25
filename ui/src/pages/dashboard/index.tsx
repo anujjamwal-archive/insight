@@ -67,7 +67,7 @@ class Dashboard extends React.PureComponent<Props, State> {
                       width: 200,
                       value: "data[0].sales",
                       precision: 4,
-                      fontSize: "43.2px",
+                      fontSize: 43.2,
                       color: [
                         { value: "red" },
                         { th: 10e3, value: "yellow" },

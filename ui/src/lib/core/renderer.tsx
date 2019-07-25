@@ -12,11 +12,11 @@ import {
   ComponentFilter
 } from "./report";
 import Widget from "../../components/widget";
-import { Text, Column, Row } from "../../vendor/elements";
+import { Column, Row } from "../../vendor/elements";
 import { pure } from "react-derivable";
 import { compactInteger } from "./humanise";
-import Select from "react-select";
-import { valueProvider } from "./component";
+import { buildText, buildSelect } from "./component";
+import { Fragment } from "react";
 
 class Context {
   providers: Record<string, any>;
@@ -105,24 +105,23 @@ class Renderer {
       : atom<boolean>(false);
 
     struct({ trigger: trigger, filters: filters }).react(fetchFn);
-    const value = status.derive(v =>
-      v.status === "READY"
-        ? v.payload!.data.map(d => ({
-            value: d[sel.display.valueField],
-            label: d[sel.display.labelField]
-          }))
-        : []
-    );
-    const WidgetR = pure(() => (
-      <Column crossAxisSize={sel.display.width} mainAxisAlignment="flex-start">
-        <Select
-          options={value.get()}
-          className="select-filter"
-          classNamePrefix="select"
-          onChange={(val: any) => selection.set(val)}
-        />
-      </Column>
-    ));
+    const value = status
+      .derive(v =>
+        v.status === "READY"
+          ? v.payload!.data.map(d => ({
+              value: d[sel.display.valueField],
+              label: d[sel.display.labelField]
+            }))
+          : []
+      )
+      .derive(
+        buildSelect({
+          width: sel.display.width,
+          onChange: (val: any) => selection.set(val)
+        })
+      );
+
+    const WidgetR = pure(() => <Fragment>{value.get()}</Fragment>);
 
     return <WidgetR />;
   }
@@ -158,11 +157,18 @@ class Renderer {
     struct({ trigger: trigger, filters: filters }).react(fetchFn);
 
     const fn = eval("data => " + kpi.display.value);
-    const value = status.derive(v =>
-      v.status === "READY" ? fn(v.payload!.data) : ""
-    );
 
-    const colorFn = valueProvider<string>(kpi.display.color || "black");
+    const text = status
+      .derive(v => (v.status === "READY" ? fn(v.payload!.data) : ""))
+      .derive(v => compactInteger(v, kpi.display.precision))
+      .derive(
+        buildText({
+          style: { flex: 1, textAlign: "center" },
+          color: kpi.display.color || "black",
+          size: +kpi.display.fontSize,
+          value: "data"
+        })
+      );
 
     const WidgetR = pure(() => (
       <Widget
@@ -172,16 +178,7 @@ class Renderer {
         isLoading={status.get().status === "LOADING"}
         onRefresh={() => trigger.set(Math.random())}
       >
-        <Text
-          style={{
-            flex: 1,
-            textAlign: "center",
-            fontSize: kpi.display.fontSize,
-            color: colorFn(value.get())
-          }}
-        >
-          {compactInteger(value.get(), kpi.display.precision)}
-        </Text>
+        {text.get()}
       </Widget>
     ));
 

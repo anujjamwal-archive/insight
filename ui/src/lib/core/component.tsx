@@ -1,8 +1,9 @@
 import * as React from "react";
-import { ThresholdValue, IIcon, IText } from "./types";
+import { ThresholdValue, IIcon, IText, ISelect, OptionType } from "./types";
 import * as d3 from "d3";
-import { Text } from "../../vendor/elements";
+import { Text, Column } from "../../vendor/elements";
 import { Icon } from "../../vendor/material";
+import Select from "react-select";
 
 type Provider<T> = (data: any) => T;
 
@@ -33,4 +34,30 @@ function buildIcon(icon: IIcon) {
   );
 }
 
-export { buildIcon, valueProvider };
+function buildText(txt: IText) {
+  const textFn = valueProvider<string>(txt.value);
+  const sizeFn = valueProvider<number>(txt.size);
+  const colorFn = valueProvider<string>(txt.color);
+  return (data: any) => (
+    <Text
+      style={{ ...txt.style, fontSize: sizeFn(data), color: colorFn(data) }}
+    >
+      {textFn(data)}
+    </Text>
+  );
+}
+
+function buildSelect(sel: ISelect) {
+  return (data: Array<OptionType>) => (
+    <Column crossAxisSize={sel.width} mainAxisAlignment="flex-start">
+      <Select
+        options={data}
+        className="select-filter"
+        classNamePrefix="select"
+        onChange={sel.onChange}
+      />
+    </Column>
+  );
+}
+
+export { buildIcon, buildText, buildSelect, valueProvider };
