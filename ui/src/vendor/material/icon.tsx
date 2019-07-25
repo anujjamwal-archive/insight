@@ -9,7 +9,8 @@ const generateStyle = (props: IProps): React.CSSProperties => ({
   fontSize: props.size,
   opacity: opacityLookup[props.status],
   animation: (props.spin && "spin 2s linear infinite") || undefined,
-  cursor: props.onClick && "pointer"
+  cursor: props.onClick && "pointer",
+  color: props.color
 });
 
 type iconSize = number;

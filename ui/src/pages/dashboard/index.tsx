@@ -89,6 +89,50 @@ class Dashboard extends React.PureComponent<Props, State> {
                     ]
                   }
                 ]
+              },
+              {
+                type: "row",
+                mainAxisAlignment: "flex-start",
+                crossAxisAlignment: "flex-start",
+                style: { margin: "10px" },
+                children: [
+                  {
+                    type: "IWidget",
+                    title: "Sales",
+                    display: {
+                      height: 100,
+                      width: 200
+                    },
+                    child: {
+                      type: "row",
+                      mainAxisAlignment: "center",
+                      mainAxisSize: "max",
+                      children: [
+                        {
+                          type: "KpiIcon",
+                          display: {
+                            value: "'trending_up'",
+                            size: 24,
+                            color: "'green'"
+                          },
+                          query: {
+                            datasource: "",
+                            metrics: [],
+                            buckets: [],
+                            order: []
+                          },
+                          filters: [
+                            {
+                              field: "division",
+                              valueProvider: "1234",
+                              value: "data.value"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
               }
             ]
           }

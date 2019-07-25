@@ -1,5 +1,5 @@
 import * as React from "react";
-import { atom, Derivable, struct } from "derivable";
+import { atom, Derivable, struct, Atom } from "derivable";
 import {
   Report,
   KPI,
@@ -9,20 +9,26 @@ import {
   IComponent,
   IRow,
   ISelect,
-  ComponentFilter
+  ComponentFilter,
+  KpiIcon,
+  IWidget
 } from "./report";
 import Widget from "../../components/widget";
 import { Column, Row } from "../../vendor/elements";
 import { pure } from "react-derivable";
 import { compactInteger } from "./humanise";
-import { buildText, buildSelect } from "./component";
+import { buildText, buildSelect, buildIcon } from "./component";
 import { Fragment } from "react";
 
 class Context {
   providers: Record<string, any>;
+  triggers: Array<Atom<number>>;
+  statuses: Array<Atom<Status<any>>>;
 
   constructor() {
     this.providers = {};
+    this.triggers = [];
+    this.statuses = [];
   }
 
   getProvider<T>(id: string): Derivable<T> {
@@ -31,6 +37,22 @@ class Context {
 
   registerProvider<T>(id: string, provider: Derivable<T>) {
     this.providers[id] = provider;
+  }
+
+  addStatus(status: Atom<Status<any>>) {
+    this.statuses.push(status);
+  }
+
+  getStatuses() {
+    return this.statuses;
+  }
+
+  addTrigger(trigger: Atom<number>) {
+    this.triggers.push(trigger);
+  }
+
+  getParentTrigger() {
+    return this.triggers[this.triggers.length - 1];
   }
 }
 
@@ -72,7 +94,7 @@ class Renderer {
   }
 
   private buildSelect(sel: ISelect, ctx: Context): React.ReactChild {
-    const trigger = atom<number>(1);
+    const trigger = ctx.getParentTrigger();
     const status = atom<Status<QueryResult>>({ status: "LOADING" });
     const selection = atom<string>("");
     const baseQuery = sel.query;
@@ -126,8 +148,86 @@ class Renderer {
     return <WidgetR />;
   }
 
+  private buildKpiIcon(kpi: KpiIcon, ctx: Context): React.ReactChild {
+    const trigger = ctx.getParentTrigger();
+    const status = atom<Status<QueryResult>>({ status: "LOADING" });
+    ctx.addStatus(status);
+
+    const baseQuery = kpi.query;
+
+    const fetchFn: FetchFn = ({ filters }) => {
+      status.set({ status: "LOADING" });
+      let query = { ...baseQuery };
+      query.filters = { ...query.filters, ...(filters || {}) };
+
+      fetch("http://www.mocky.io/v2/5d32665b330000c9c57ba633", {
+        method: "POST",
+        redirect: "follow",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(query)
+      })
+        .then(res => res.json())
+        .then(res => {
+          status.set({ status: "READY", payload: res });
+        })
+        .catch(res => {
+          status.set({ status: "ERROR", payload: res });
+        });
+    };
+
+    let filters = kpi.filters && prepareFilters(kpi.filters, ctx);
+
+    struct({ trigger: trigger, filters: filters }).react(fetchFn);
+
+    const fn = eval("data => " + kpi.display.value);
+
+    const icon = status
+      .derive(v => (v.status === "READY" ? fn(v.payload!.data) : ""))
+      .derive(
+        buildIcon({
+          color: kpi.display.color || "'black'",
+          size: +kpi.display.size,
+          value: kpi.display.value
+        })
+      );
+
+    const WidgetR = pure(() => <Fragment>{icon.get()}</Fragment>);
+
+    return <WidgetR />;
+  }
+
+  private buildWidget(kpi: IWidget, ctx: Context): React.ReactChild {
+    const offset = ctx.getStatuses().length;
+
+    const trigger = atom<number>(1);
+    ctx.addTrigger(trigger);
+    const children = this.build(kpi.child, ctx);
+
+    const status = struct(ctx.getStatuses().slice(offset)).derive(
+      (st: Array<Status<any>>) =>
+        st.reduceRight((a, s) => a || s.status === "LOADING", false)
+    );
+
+    const WidgetR = pure(() => (
+      <Widget
+        title={kpi.title}
+        width={kpi.display.width}
+        height={kpi.display.height}
+        isLoading={status.get()}
+        onRefresh={() => trigger.set(Math.random())}
+      >
+        {children}
+      </Widget>
+    ));
+
+    return <WidgetR />;
+  }
+
   private buildKpi(kpi: KPI, ctx: Context): React.ReactChild {
     const trigger = atom<number>(1);
+    ctx.addTrigger(trigger);
+
     const status = atom<Status<QueryResult>>({ status: "LOADING" });
     const baseQuery = kpi.query;
 
@@ -195,6 +295,10 @@ class Renderer {
         return this.buildRow(c, ctx);
       case "Select":
         return this.buildSelect(c, ctx);
+      case "KpiIcon":
+        return this.buildKpiIcon(c, ctx);
+      case "IWidget":
+        return this.buildWidget(c, ctx);
       default:
         return <div />;
     }
@@ -202,6 +306,7 @@ class Renderer {
 
   buildPage(page: number): React.ReactChild {
     const ctx = new Context();
+    ctx.addTrigger(atom<number>(0));
     return this.build(this.spec.pages[page].children, ctx);
   }
 }

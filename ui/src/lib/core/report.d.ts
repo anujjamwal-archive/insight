@@ -10,7 +10,7 @@ interface ReportPage {
   children: IComponent;
 }
 
-type IComponent = IRow | IColumn | KPI | ISelect | Chart;
+type IComponent = IRow | IColumn | KPI | ISelect | Chart | KpiIcon | IWidget;
 
 interface ISelect {
   id: string;
@@ -89,8 +89,6 @@ interface Status<T> {
   payload?: T;
 }
 
-type MetricColor = ThresholdValue<string>;
-
 interface ComponentFilter {
   field: string;
   valueProvider: string;
@@ -107,9 +105,30 @@ interface KPI {
     value: string;
     precision: number;
     fontSize: number;
-    color?: MetricColor;
+    color?: string | ThresholdValue<string>;
   };
   filters?: Array<ComponentFilter>;
+}
+
+interface KpiIcon {
+  type: "KpiIcon";
+  query: Query;
+  display: {
+    value: string | ThresholdValue<string>;
+    size: number | ThresholdValue<number>;
+    color?: string | ThresholdValue<string>;
+  };
+  filters?: Array<ComponentFilter>;
+}
+
+interface IWidget {
+  type: "IWidget";
+  title: string;
+  display: {
+    width: number | string;
+    height: number | string;
+  };
+  child: IComponent;
 }
 
 interface Chart {
@@ -151,7 +170,9 @@ export {
   IColumn,
   IRow,
   ISelect,
+  IWidget,
   KPI,
+  KpiIcon,
   Query,
   QueryResult,
   Report,
