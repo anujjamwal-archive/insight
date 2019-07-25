@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Container, Column, Row, Text } from "../../vendor/elements";
 import { Icon } from "../../vendor/material";
-import { tsPropertySignature } from "@babel/types";
 
 interface Props {
   width: string | number;
@@ -46,7 +45,7 @@ const Widget: React.FC<Props> = ({
         <Icon
           icon="autorenew"
           status="active-unfocused"
-          size="md-24"
+          size={24}
           spin={isLoading}
           onClick={isLoading ? undefined : onRefresh}
         />

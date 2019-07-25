@@ -12,11 +12,11 @@ import {
   ComponentFilter
 } from "./report";
 import Widget from "../../components/widget";
-import { Text, Column, Row, Container } from "../../vendor/elements";
+import { Text, Column, Row } from "../../vendor/elements";
 import { pure } from "react-derivable";
 import { compactInteger } from "./humanise";
-import * as d3 from "d3";
 import Select from "react-select";
+import { valueProvider } from "./component";
 
 class Context {
   providers: Record<string, any>;
@@ -162,12 +162,7 @@ class Renderer {
       v.status === "READY" ? fn(v.payload!.data) : ""
     );
 
-    const colorFn = kpi.display.color
-      ? d3
-          .scaleThreshold<number, string>()
-          .range(kpi.display.color.map(c => c.color))
-          .domain(kpi.display.color.map(c => c.th).filter(c => !!c) as number[])
-      : () => "black";
+    const colorFn = valueProvider<string>(kpi.display.color || "black");
 
     const WidgetR = pure(() => (
       <Widget

@@ -1,3 +1,5 @@
+import { ThresholdValue } from "./types";
+
 interface Report {
   title: string;
   pages: Array<ReportPage>;
@@ -87,7 +89,7 @@ interface Status<T> {
   payload?: T;
 }
 
-type MetricColor = Array<{ th?: number; color: string }>;
+type MetricColor = ThresholdValue<string>;
 
 interface ComponentFilter {
   field: string;

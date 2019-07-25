@@ -6,13 +6,13 @@ const generateStyle = (props: IProps): React.CSSProperties => ({
   fontWeight: "normal",
   fontStyle: "normal",
   display: "inline-block",
-  fontSize: +props.size.replace("md-", ""),
+  fontSize: props.size,
   opacity: opacityLookup[props.status],
   animation: (props.spin && "spin 2s linear infinite") || undefined,
   cursor: props.onClick && "pointer"
 });
 
-type iconSize = "md-18" | "md-24" | "md-36" | "md-48";
+type iconSize = number;
 
 type status = "active" | "active-unfocused" | "inactive";
 

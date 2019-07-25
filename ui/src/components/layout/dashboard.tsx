@@ -21,12 +21,12 @@ const Layout: React.FC<Props> = props => (
         crossAxisAlignment="center"
         style={{ alignSelf: "center" }}
       >
-        <Icon icon="menu" size="md-24" status="active-unfocused" />
+        <Icon icon="menu" size={24} status="active-unfocused" />
         <Spacer width="10px" />
         <Text>{props.title}</Text>
       </Row>
       <Row mainAxisAlignment="flex-end" style={{ alignSelf: "center" }}>
-        <Icon icon="account_circle" size="md-24" status="active-unfocused" />
+        <Icon icon="account_circle" size={24} status="active-unfocused" />
       </Row>
     </AppBar>
     {props.children}

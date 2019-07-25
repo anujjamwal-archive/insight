@@ -69,9 +69,9 @@ class Dashboard extends React.PureComponent<Props, State> {
                       precision: 4,
                       fontSize: "43.2px",
                       color: [
-                        { color: "red" },
-                        { th: 10e3, color: "yellow" },
-                        { th: 10e6, color: "green" }
+                        { value: "red" },
+                        { th: 10e3, value: "yellow" },
+                        { th: 10e6, value: "green" }
                       ]
                     },
                     query: {

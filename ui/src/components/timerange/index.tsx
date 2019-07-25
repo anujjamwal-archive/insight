@@ -17,7 +17,7 @@ const TimeRange: React.FC<Props> = ({}) => (
     }}
   >
     <Text>06/24/2019 - 10/24/2019</Text>
-    <Icon icon="date_range" size="md-18" status="active-unfocused" />
+    <Icon icon="date_range" size={18} status="active-unfocused" />
   </Row>
 );
 
